@@ -1,0 +1,53 @@
+label,group,source,symbol,notes
+Nifty 50,Megacap Indices,nse_price,NIFTY 50,
+Sensex,Megacap Indices,yahoo,^BSESN,
+Nifty Next 50,Large Cap Indices,nse_price,NIFTY NEXT 50,
+Nifty 100,Large Cap Indices,nse_price,NIFTY 100,
+Nifty50 Equal Weight,Large Cap Indices,nse_price,NIFTY50 EQUAL WEIGHT,
+Nifty100 Equal Weight,Large Cap Indices,nse_price,NIFTY100 EQUAL WEIGHT,
+Nifty 200 TRI,Large Cap Indices,nse_tri,NIFTY 200,
+Nifty Large Midcap 250,Large Cap Indices,nse_price,NIFTY LARGEMIDCAP 250,
+Nifty Midcap 150,Midcap & Smallcap Indices,nse_price,NIFTY MIDCAP 150,
+Nifty Smallcap 250,Midcap & Smallcap Indices,nse_price,NIFTY SMALLCAP 250,
+Nifty MidSmall 400,Midcap & Smallcap Indices,nse_price,NIFTY MIDSMALLCAP 400,
+NSE 500,Total Cap Indices,nse_price,NIFTY 500,
+BSE 500,Total Cap Indices,manual,,BSE-only index - not covered by NSE or Yahoo free sources. See README.
+Nifty 100 Low Volatility 30,Single Factor Indices,nse_price,NIFTY100 LOW VOLATILITY 30,
+Nifty 100 Quality 30,Single Factor Indices,nse_price,NIFTY100 QUALITY 30,VERIFY name via index_name_list()
+Nifty200 Value 30 TRI,Single Factor Indices,nse_tri,NIFTY200 VALUE 30,
+Nifty 200 Momentum 30 Index TRI,Single Factor Indices,nse_tri,NIFTY200 MOMENTUM 30,
+Nifty 200 Quality 30 Index TRI,Single Factor Indices,nse_tri,NIFTY200 QUALITY 30,
+Nifty 200 Momentum 30 Index,Single Factor Indices,nse_price,NIFTY200 MOMENTUM 30,
+Nifty Alpha 50,Single Factor Indices,nse_price,NIFTY ALPHA 50,
+Nifty Alpha Low Volatility 30,Single Factor Indices,nse_price,NIFTY ALPHA LOW-VOLATILITY 30,VERIFY exact name/short-code via index_name_list()
+Nifty India Defence TRI,Sectoral Indices,nse_tri,NIFTY INDIA DEFENCE,
+Nifty PSU Bank TRI,Sectoral Indices,nse_tri,NIFTY PSU BANK,
+Nifty Bank TRI,Sectoral Indices,nse_tri,NIFTY BANK,
+Nifty Private Bank TRI,Sectoral Indices,nse_tri,NIFTY PRIVATE BANK,
+Nifty Financial Services TRI,Sectoral Indices,nse_tri,NIFTY FINANCIAL SERVICES,
+Nifty PSE TRI,Sectoral Indices,nse_tri,NIFTY PSE,
+Nifty Realty TRI,Sectoral Indices,nse_tri,NIFTY REALTY,
+Nifty Auto TRI,Sectoral Indices,nse_tri,NIFTY AUTO,
+Nifty India Manufacturing TRI,Sectoral Indices,nse_tri,NIFTY INDIA MANUFACTURING,
+Nifty Infrastructure TRI,Sectoral Indices,nse_tri,NIFTY INFRASTRUCTURE,
+Nifty Healthcare TRI,Sectoral Indices,nse_tri,NIFTY HEALTHCARE INDEX,VERIFY exact name
+Nifty Metal TRI,Sectoral Indices,nse_tri,NIFTY METAL,
+BSE Consumer Discretionary TRI,Sectoral Indices,manual,,BSE-only index - not covered by NSE or Yahoo free sources. See README.
+Nifty Commodities TRI,Sectoral Indices,nse_tri,NIFTY COMMODITIES,
+Nifty FMCG TRI,Sectoral Indices,nse_tri,NIFTY FMCG,
+BSE Utilities TRI,Sectoral Indices,manual,,BSE-only index - not covered by NSE or Yahoo free sources. See README.
+NIFTY100 ESG TRI,Sectoral Indices,nse_tri,NIFTY100 ESG,
+Nifty Oil & Gas TRI,Sectoral Indices,nse_tri,NIFTY OIL & GAS,
+Nifty Energy TRI,Sectoral Indices,nse_tri,NIFTY ENERGY,
+Nifty IT TRI,Sectoral Indices,nse_tri,NIFTY IT,
+S&P 500(US),Global Indices (USD),yahoo,^GSPC,
+Nasdaq(US),Global Indices (USD),yahoo,^NDX,Bloomberg's NDX Index = Nasdaq-100 -> Yahoo ^NDX (not ^IXIC which is Composite)
+Nikkei(Japan),Global Indices (USD),yahoo,^N225,
+Dax Index(Germany),Global Indices (USD),yahoo,^GDAXI,
+CAC 40 Index(France),Global Indices (USD),yahoo,^FCHI,
+FTSE(UK),Global Indices (USD),yahoo,^FTSE,
+Hang Seng(Hong Kong),Global Indices (USD),yahoo,^HSI,
+Shanghai(China),Global Indices (USD),yahoo,000300.SS,Original Bloomberg ticker was SHSZ300 Index (CSI 300 - Shanghai+Shenzhen) not the Shanghai Composite - kept same underlying index
+USD/INR,Currency and Gold,yahoo,INR=X,
+Gold(USD),Currency and Gold,yahoo,GC=F,
+Silver(USD),Currency and Gold,yahoo,SI=F,

@@ -1,0 +1,3 @@
+jugaad-data
+yfinance
+openpyxl
