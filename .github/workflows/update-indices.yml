@@ -27,11 +27,13 @@ jobs:
       - name: Build the standard Tracker sheet from the cache
         run: python query_returns.py --all --output tracker_auto.xlsx
 
-      - name: Append fresh NAVs into CA_Equity_Markets_Tracker.xlsx (Sheet1 only - formulas untouched)
+      - name: Rebuild CA_Equity_Markets_Tracker.xlsx fresh (formulas always come from the untouched
+          pristine template, never from last week's output - a binary .xlsx that both this Action
+          and a person can edit is exactly what corrupted the file once already)
         run: |
-          python export_to_tracker.py \
+          python build_tracker.py \
             --config indices_config.csv \
-            --tracker CA_Equity_Markets_Tracker.xlsx \
+            --old-tracker tracker_template_PRISTINE_DO_NOT_EDIT.xlsx \
             --output CA_Equity_Markets_Tracker.xlsx
 
       - name: Commit updated history + trackers

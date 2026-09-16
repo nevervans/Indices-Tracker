@@ -113,6 +113,36 @@ SHEET1_COLUMN_ORDER = [
 DATA_START_ROW = 15  # matches 'Indices Return's hardcoded $B$15 table start
 
 
+def check_template_has_formulas(old_tracker_path):
+    """Guard against ever silently building from a corrupted template again.
+
+    A binary .xlsx that's been through a bad git merge, or got "repaired" by
+    Excel after one, can look completely normal (right sheet names, right
+    labels, right formatting) while its formulas are quietly gone. Since
+    this script trusts --old-tracker for 'Indices Return' / 'Tracker' /
+    'Manual' wholesale and copies it forward untouched, a corrupted template
+    would produce a tracker that LOOKS fine and opens fine, but is blank
+    where it matters - exactly what happened once already. Fail loudly here
+    instead of producing that silently-broken file again.
+    """
+    wb = openpyxl.load_workbook(old_tracker_path, data_only=False)
+    if "Indices Return" not in wb.sheetnames:
+        raise SystemExit(f"'{old_tracker_path}' has no 'Indices Return' sheet - wrong file?")
+    ws = wb["Indices Return"]
+    sample_cells = [(3, 4), (7, 5), (8, 5), (30, 5)]  # D3, E7, E8, E30
+    found_formula = any(
+        isinstance(ws.cell(row=r, column=c).value, str) and ws.cell(row=r, column=c).value.startswith("=")
+        for r, c in sample_cells
+    )
+    if not found_formula:
+        raise SystemExit(
+            f"'{old_tracker_path}' has no formulas in 'Indices Return' (checked cells "
+            f"D3/E7/E8/E30, all blank or not formulas) - this template looks corrupted. "
+            f"Do not build from it. Use tracker_template_PRISTINE_DO_NOT_EDIT.xlsx instead, "
+            f"or re-download a known-good copy before running this again."
+        )
+
+
 def load_old_sheet1_values(old_tracker_path):
     """Per column letter -> {date: value}, straight from the old file's
     Sheet1, skipping error placeholders like '#N/A N/A' / '#NAME?'."""
@@ -141,6 +171,8 @@ def main():
 
     config = lib.load_config(args.config)
     label_to_config = {e["label"]: e for e in config}
+
+    check_template_has_formulas(args.old_tracker)
 
     print("Reading old Sheet1 (pre-pipeline history to preserve) ...")
     old_by_col = load_old_sheet1_values(args.old_tracker)
