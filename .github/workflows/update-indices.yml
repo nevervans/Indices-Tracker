@@ -27,16 +27,25 @@ jobs:
       - name: Build the standard Tracker sheet from the cache
         run: python query_returns.py --all --output tracker_auto.xlsx
 
-      - name: Commit updated history + tracker
+      - name: Append fresh NAVs into CA_Equity_Markets_Tracker.xlsx (Sheet1 only - formulas untouched)
+        run: |
+          python export_to_tracker.py \
+            --config indices_config.csv \
+            --tracker CA_Equity_Markets_Tracker.xlsx \
+            --output CA_Equity_Markets_Tracker.xlsx
+
+      - name: Commit updated history + trackers
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add history/ tracker_auto.xlsx
+          git add history/ tracker_auto.xlsx CA_Equity_Markets_Tracker.xlsx
           git diff --cached --quiet || git commit -m "Weekly indices update $(date +'%Y-%m-%d')"
           git push
 
-      - name: Also upload as a workflow artifact
+      - name: Also upload as workflow artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: tracker_auto
-          path: tracker_auto.xlsx
+          name: trackers
+          path: |
+            tracker_auto.xlsx
+            CA_Equity_Markets_Tracker.xlsx
