@@ -11,7 +11,7 @@ Nifty Midcap 150,Midcap & Smallcap Indices,nse_price,NIFTY MIDCAP 150,
 Nifty Smallcap 250,Midcap & Smallcap Indices,nse_price,NIFTY SMALLCAP 250,
 Nifty MidSmall 400,Midcap & Smallcap Indices,nse_price,NIFTY MIDSMALLCAP 400,
 NSE 500,Total Cap Indices,nse_price,NIFTY 500,
-BSE 500,Total Cap Indices,bse,S&P BSE 500,VERIFY exact name via bse.fetchIndexNames() - BSE renamed many indices to 'S&P BSE X' post-2015
+BSE 500,Total Cap Indices,bse,BSE500,"Using the Indx_cd code, not the display name 'BSE 500' - the display name returned empty data even though it's confirmed correct via fetchIndexNames(), suggesting the API expects the short code instead."
 Nifty 100 Low Volatility 30,Single Factor Indices,nse_price,NIFTY100 LOW VOLATILITY 30,
 Nifty 100 Quality 30,Single Factor Indices,nse_price,NIFTY100 QUALITY 30,VERIFY name via index_name_list()
 Nifty200 Value 30 TRI,Single Factor Indices,nse_tri,NIFTY200 VALUE 30,
@@ -32,10 +32,10 @@ Nifty India Manufacturing TRI,Sectoral Indices,nse_tri,NIFTY INDIA MANUFACTURING
 Nifty Infrastructure TRI,Sectoral Indices,nse_tri,NIFTY INFRASTRUCTURE,
 Nifty Healthcare TRI,Sectoral Indices,nse_tri,NIFTY HEALTHCARE,VERIFY exact name (NIFTY HEALTHCARE INDEX returned no data on first live test)
 Nifty Metal TRI,Sectoral Indices,nse_tri,NIFTY METAL,
-BSE Consumer Discretionary TRI,Sectoral Indices,bse,S&P BSE CONSUMER DISCRETIONARY GOODS AND SERVICES TRI,VERIFY exact name via bse.fetchIndexNames()
+BSE Consumer Discretionary TRI,Sectoral Indices,bse,SPBSCDIP,"Using the Indx_cd code (SPBSCDIP), not the display name 'BSE Consumer Discretionary', which returned empty data. No separate TRI variant exists in BSE's name list, so this may be price return rather than total return - verify against bseindia.com if exactness matters."
 Nifty Commodities TRI,Sectoral Indices,nse_tri,NIFTY COMMODITIES,
 Nifty FMCG TRI,Sectoral Indices,nse_tri,NIFTY FMCG,
-BSE Utilities TRI,Sectoral Indices,bse,S&P BSE UTILITIES TRI,VERIFY exact name via bse.fetchIndexNames()
+BSE Utilities TRI,Sectoral Indices,bse,SPBSUTIP,"Using the Indx_cd code (SPBSUTIP), not the display name 'BSE Utilities', which returned empty data. No separate TRI variant exists in BSE's name list, so this may be price return rather than total return - verify against bseindia.com if exactness matters."
 NIFTY100 ESG TRI,Sectoral Indices,nse_tri,NIFTY100 ESG,
 Nifty Oil & Gas TRI,Sectoral Indices,nse_tri,NIFTY OIL & GAS,
 Nifty Energy TRI,Sectoral Indices,nse_tri,NIFTY ENERGY,

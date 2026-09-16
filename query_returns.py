@@ -65,14 +65,19 @@ def save_xlsx(rows, columns, kinds, path):
         for c_idx, val in enumerate(row, start=1):
             cell = ws.cell(row=r_idx, column=c_idx)
             kind = kinds[c_idx - 1]
-            if kind == TEXT or val == "-":
+            if kind == TEXT:
                 cell.value = val
-            elif kind == PERCENT:
-                cell.value = float(str(val).strip("%")) / 100
-                cell.number_format = "0.00%"
-            else:  # NUMBER
-                cell.value = float(val)
-                cell.number_format = "#,##0.00"
+                continue
+            try:
+                if kind == PERCENT:
+                    cell.value = float(str(val).strip("%")) / 100
+                    cell.number_format = "0.00%"
+                else:  # NUMBER
+                    cell.value = float(val)
+                    cell.number_format = "#,##0.00"
+            except (ValueError, TypeError):
+                # covers "-", "no data", "error: ...", or anything else non-numeric
+                cell.value = str(val)
     for c in range(1, len(columns) + 1):
         ws.column_dimensions[openpyxl.utils.get_column_letter(c)].width = 16
     wb.save(path)

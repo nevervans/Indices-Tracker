@@ -145,7 +145,7 @@ def fetch_bse(index_name: str, from_date, to_date, work_dir: str = ".bse_downloa
                             f"Got columns: {list(row.keys())}. Update date_keys/value_keys in fetch_bse()."
                         )
                     parsed_date = None
-                    for fmt in ("%d-%b-%Y", "%d/%m/%Y", "%d-%m-%Y", "%Y-%m-%d"):
+                    for fmt in ("%d-%B-%Y", "%d-%b-%Y", "%d/%m/%Y", "%d-%m-%Y", "%Y-%m-%d"):
                         try:
                             parsed_date = datetime.strptime(str(raw_date).strip(), fmt)
                             break

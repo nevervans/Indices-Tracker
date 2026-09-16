@@ -72,19 +72,16 @@ Runs every Friday 17:00 IST automatically, or manually anytime from the
 | S&P 500, Nasdaq, Nikkei, DAX, CAC, FTSE, Hang Seng, USD/INR, Gold, Silver, Sensex | Yahoo Finance, via `yfinance` |
 | Shanghai/CSI300 | Eastmoney's public data feed (`push2his.eastmoney.com`), via the `akshare` library - the **real CSI 300 index**, not an ETF proxy. Eastmoney serves data back to each index's actual inception (this endpoint is what powers `akshare`, `efinance`, and is even used by Microsoft's own `qlib` project for this exact index). Replaces the earlier `000300.SS` Yahoo ticker, which only went back to 2021 |
 
-## Every index is now covered - one thing worth verifying
-The 3 BSE indices are configured with my best-guess exact names
-(`S&P BSE 500`, `S&P BSE UTILITIES TRI`, `S&P BSE CONSUMER DISCRETIONARY
-GOODS AND SERVICES TRI`) since I couldn't make a live call to BSE's API
-from where I built this. If `refresh_history.py` errors on any of these
-three, confirm the exact name BSE uses with:
-```python
-from bse import BSE
-with BSE(download_folder='.') as bse:
-    names = bse.fetchIndexNames()
-    print(names)
-```
-and update the `symbol` column in `indices_config.csv` to match exactly.
+## Every index is now covered
+The 3 BSE indices' exact names (`BSE 500`, `BSE Utilities`, `BSE Consumer
+Discretionary`) were confirmed by actually calling `bse.fetchIndexNames()`
+- turns out BSE's real names are simpler than the `S&P BSE X` guesses
+first tried (S&P/Asia Index only renamed a handful of legacy indices, not
+these). One open question: BSE's name list has no separate "TRI" entry
+for Utilities or Consumer Discretionary, so it's not confirmed whether
+`fetchHistoricalIndexData` returns price return or total return for
+these two - worth spot-checking a live value against bseindia.com if the
+distinction matters for your reporting.
 
 CSI 300 (Shanghai) uses akshare's `index_zh_a_hist(symbol="000300")` -
 this one is well-established (same endpoint used by akshare, efinance,
