@@ -5,6 +5,10 @@ Answers "what was the return as of <date>" or "what was the return from
 <date A> to <date B>" for any index (or all of them), using the history
 already saved by refresh_history.py. No network calls - instant.
 
+Includes the underlying NAV/index values alongside the returns, not just
+the percentages. For the full raw daily history instead, use
+export_history.py.
+
 Examples:
     # Standard 1W/MTD/.../10Y table, as of today, every index
     python query_returns.py --all
@@ -29,6 +33,9 @@ from openpyxl.styles import Font
 
 import indices_lib as lib
 
+# column "kind" tags used to pick the right cell format on export
+TEXT, NUMBER, PERCENT = "text", "number", "percent"
+
 
 def print_table(rows, columns):
     widths = [max(len(str(r[i])) for r in ([columns] + rows)) for i in range(len(columns))]
@@ -44,7 +51,11 @@ def fmt_pct(v):
     return "-" if v is None else f"{v:.2%}"
 
 
-def save_xlsx(rows, columns, path):
+def fmt_num(v):
+    return "-" if v is None else f"{v:.2f}"
+
+
+def save_xlsx(rows, columns, kinds, path):
     wb = openpyxl.Workbook()
     ws = wb.active
     ws.title = "Returns"
@@ -53,11 +64,15 @@ def save_xlsx(rows, columns, path):
     for r_idx, row in enumerate(rows, start=2):
         for c_idx, val in enumerate(row, start=1):
             cell = ws.cell(row=r_idx, column=c_idx)
-            if c_idx == 1 or val == "-":
+            kind = kinds[c_idx - 1]
+            if kind == TEXT or val == "-":
                 cell.value = val
-            else:
-                cell.value = float(val.strip("%")) / 100
+            elif kind == PERCENT:
+                cell.value = float(str(val).strip("%")) / 100
                 cell.number_format = "0.00%"
+            else:  # NUMBER
+                cell.value = float(val)
+                cell.number_format = "#,##0.00"
     for c in range(1, len(columns) + 1):
         ws.column_dimensions[openpyxl.utils.get_column_letter(c)].width = 16
     wb.save(path)
@@ -92,30 +107,47 @@ def main():
     if custom_window:
         start_d = datetime.strptime(args.start, "%Y-%m-%d")
         end_d = datetime.strptime(args.end, "%Y-%m-%d")
-        columns = ["Index", f"{args.start} -> {args.end}"]
+        columns = ["Index", "Start Date", "Start Value", "End Date", "End Value",
+                   f"Return ({args.start} -> {args.end})"]
+        kinds = [TEXT, TEXT, NUMBER, TEXT, NUMBER, PERCENT]
         rows = []
         for label in labels:
             series = lib.load_history(label, args.history_dir)
             if not series:
-                rows.append([label, "no data"])
+                rows.append([label, "-", "-", "-", "-", "no data"])
                 continue
+            start_pt = lib.value_on_or_before(series, start_d)
+            end_pt = lib.value_on_or_before(series, end_d)
             ret = lib.compute_return_between(series, start_d, end_d)
-            rows.append([label, fmt_pct(ret)])
+            rows.append([
+                label,
+                start_pt[0].strftime("%Y-%m-%d") if start_pt else "-",
+                fmt_num(start_pt[1]) if start_pt else "-",
+                end_pt[0].strftime("%Y-%m-%d") if end_pt else "-",
+                fmt_num(end_pt[1]) if end_pt else "-",
+                fmt_pct(ret),
+            ])
     else:
         asof_d = datetime.strptime(args.asof, "%Y-%m-%d") if args.asof else datetime.today()
-        columns = ["Index"] + [h for h, _ in lib.PERIOD_COLUMNS]
+        columns = ["Index", "As Of Date", "Value"] + [h for h, _ in lib.PERIOD_COLUMNS]
+        kinds = [TEXT, TEXT, NUMBER] + [PERCENT] * len(lib.PERIOD_COLUMNS)
         rows = []
         for label in labels:
             series = lib.load_history(label, args.history_dir)
             if not series:
-                rows.append([label] + ["no data"] * len(lib.PERIOD_COLUMNS))
+                rows.append([label, "-", "-"] + ["no data"] * len(lib.PERIOD_COLUMNS))
                 continue
+            latest = lib.value_on_or_before(series, asof_d)
             returns = lib.compute_standard_returns(series, asof_d)
-            rows.append([label] + [fmt_pct(returns[h]) for h, _ in lib.PERIOD_COLUMNS])
+            rows.append([
+                label,
+                latest[0].strftime("%Y-%m-%d") if latest else "-",
+                fmt_num(latest[1]) if latest else "-",
+            ] + [fmt_pct(returns[h]) for h, _ in lib.PERIOD_COLUMNS])
 
     print_table(rows, columns)
     if args.output:
-        save_xlsx(rows, columns, args.output)
+        save_xlsx(rows, columns, kinds, args.output)
 
 
 if __name__ == "__main__":

@@ -1,3 +1,5 @@
 jugaad-data
 yfinance
 openpyxl
+bse
+akshare

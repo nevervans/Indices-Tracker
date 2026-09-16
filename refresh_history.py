@@ -36,7 +36,15 @@ def main():
             print(f"[skip] {label}: manual/no free source")
             continue
 
+        source_key = f"{entry['source']}:{entry['symbol']}"
+        saved_key = lib.get_saved_source_key(label, args.history_dir)
         existing = lib.load_history(label, args.history_dir)
+
+        if existing and saved_key is not None and saved_key != source_key:
+            print(f"[source changed] {label}: was '{saved_key}', now '{source_key}' - "
+                  f"discarding stale history and doing a full re-backfill")
+            existing = []
+
         if existing:
             from_date = existing[-1][0].date() + timedelta(days=1)
             if from_date > today:
@@ -60,7 +68,7 @@ def main():
             continue
 
         merged = lib.merge_series(existing, new_series)
-        lib.save_history(label, merged, args.history_dir)
+        lib.save_history(label, merged, args.history_dir, source_key=source_key)
         print(f"  saved {len(merged)} total rows "
               f"({merged[0][0].date()} -> {merged[-1][0].date()})")
         time.sleep(args.delay)
